@@ -1,66 +1,254 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@100..1000&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/images/favicon-32x32.png"
+    />
 
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
-  
-  <title>Frontend Mentor | Weather app</title>
+    <title>Frontend Mentor | Weather app</title>
 
-  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
-  <style>
-    .attribution { font-size: 0.6875rem; text-align: center; }
-    .attribution a { color: hsl(228, 45%, 44%); }
-  </style>
-</head>
-<body>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  Units
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              dm: ["DM Sans", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
 
-  Switch to Imperial/Metric
+    <style>
+      .attribution {
+        font-size: 0.6875rem;
+        text-align: center;
+      }
+      .attribution a {
+        color: hsl(228, 45%, 44%);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[hsl(243,96%,9%)] text-white px-20 py-12 items-center font-dm"
+  >
+    <section class="flex flex-row justify-between items-center">
+      <img src="assets/images/logo.svg" alt="lOGO" class="h-[35px]" />
+      <div class="flex flex-row gap-3 items-center">
+        <div class="relative inline-block w-64">
+          <select
+            id="weather-data"
+            class="w-full appearance-none bg-[hsl(243,96%,9%)] border border-slate-700 text-slate-200 py-2.5 px-4 pr-10 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer text-sm font-medium"
+          >
+            <optgroup
+              label="Switch Unit System"
+              class="bg-[hsl(243,96%,9%)] text-slate-400 font-semibold italic"
+            >
+              <option
+                value="celsius"
+                class="text-slate-200 font-normal not-italic bg-[hsl(243,96%,9%)] py-1"
+              >
+                Celsius (°C)
+              </option>
+              <option
+                value="fahrenheit"
+                class="text-slate-200 font-normal not-italic bg-[hsl(243,96%,9%)] py-1"
+              >
+                Fahrenheit (°F)
+              </option>
+            </optgroup>
 
-  Temperature
+            <optgroup
+              label="Wind Speed"
+              class="bg-[hsl(243,96%,9%)] text-slate-400 font-semibold italic"
+            >
+              <option
+                value="kmh"
+                class="text-slate-200 font-normal not-italic bg-[hsl(243,96%,9%)] py-1"
+              >
+                km/h
+              </option>
+              <option
+                value="mph"
+                class="text-slate-200 font-normal not-italic bg-[hsl(243,96%,9%)] py-1"
+              >
+                mph
+              </option>
+            </optgroup>
 
-  Celsius (°C)
-  Fahrenheit (°F)
+            <optgroup
+              label="Precipitation"
+              class="bg-[hsl(243,96%,9%)] text-slate-400 font-semibold italic"
+            >
+              <option
+                value="mm"
+                class="text-slate-200 font-normal not-italic bg-[hsl(243,96%,9%)] py-1"
+              >
+                Millimeters (mm)
+              </option>
+              <option
+                value="in"
+                class="text-slate-200 font-normal not-italic bg-[hsl(243,96%,9%)] py-1"
+              >
+                Inches (in)
+              </option>
+            </optgroup>
+          </select>
 
-  Wind Speed
+          <!-- Custom Dropdown Icon -->
+          <div
+            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+              <path
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+    <h1 class="text-white text-5xl font-bold text-center my-10 mx-10">
+      How's the sky looking today?
+    </h1>
+    <section class="flex gap-3 items-center justify-center mt-15">
+      <div
+        id="input-container"
+        class="bg-[hsl(243,23%,24%)] w-[480px] h-[45px] relative flex items-center rounded-lg px-3 py-2"
+      >
+        <img
+          src="assets/images/icon-search.svg"
+          alt="Search"
+          id="input-icon"
+          class="bg-[hsl(243,23%,24%)] m-2"
+        />
 
-  km/h
-  mph
+        <input
+          type="text"
+          placeholder="Search for a place..."
+          id="search"
+          class="bg-transparent"
+        />
+      </div>
+      <button
+        class="bg-[hsl(233,67%,56%)] px-3 py-2.5 rounded-lg text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        Search
+      </button>
+    </section>
+    <section class="flex justify-between items-start mt-20 gap-5 mb-10">
+      <div class="flex flex-col">
+        <section
+          class="bg-[url(assets/images/bg-today-large.svg)] w-[700px] h-[200px] rounded-lg py-3 px-5"
+        >
+          <div class="flex justify-between items-center h-full">
+            <div>
+              <p id="place">Berlin, Germany</p>
+              <p id="date">Tuesday, August 5, 2025</p>
+            </div>
 
-  Precipitation
+            <p id="temperature" class="text-6xl font-bold">20°</p>
+          </div>
+        </section>
 
-  Millimeters (mm)
-  Inches (in)
+        <section
+          id="weatherStats"
+          class="flex justify-between mt-5 w-[700px]"
+        ></section>
 
-  How's the sky looking today?
+        <section>
+          <h2 class="mt-8 font-bold">Daily forecast</h2>
+          <div id="dailyForecast" class="flex gap-4 mt-5 max-w-[700px]"></div>
+        </section>
+      </div>
 
-  Search for a city, e.g., New York
-  Search
+      <section class="w-[350px] bg-[hsl(243,27%,20%)] rounded-lg p-5">
+        <div class="flex justify-between items-center">
+          <h2 class="font-bold">Hourly forecast</h2>
 
-  Feels like
-  <!-- Insert temperature here -->
+          <div
+            class="flex items-center gap-2 bg-[hsl(243,23%,30%)] border border-slate-700 rounded-lg px-3 py-1.5 shadow-sm w-fit"
+          >
+            <select
+              id="category"
+              class="bg-transparent text-slate-200 text-sm font-medium focus:outline-none cursor-pointer py-1 pr-2 border-none appearance-none"
+            >
+              <option
+                value="tuesday"
+                class="bg-[hsl(243,96%,9%)] text-slate-200"
+              >
+                Tuesday
+              </option>
+              <option
+                value="wednesday"
+                class="bg-[hsl(243,96%,9%)] text-slate-200"
+              >
+                Wednesday
+              </option>
+              <option
+                value="thursday"
+                class="bg-[hsl(243,96%,9%)] text-slate-200"
+              >
+                Thursday
+              </option>
+              <option
+                value="friday"
+                class="bg-[hsl(243,96%,9%)] text-slate-200"
+              >
+                Friday
+              </option>
+              <option
+                value="saturday"
+                class="bg-[hsl(243,96%,9%)] text-slate-200"
+              >
+                Saturday
+              </option>
+              <option
+                value="sunday"
+                class="bg-[hsl(243,96%,9%)] text-slate-200"
+              >
+                Sunday
+              </option>
+              <option
+                value="monday"
+                class="bg-[hsl(243,96%,9%)] text-slate-200"
+              >
+                Monday
+              </option>
+            </select>
 
-  Humidity
-  <!-- Insert humidity here -->
+            <svg
+              class="w-4 h-4 text-slate-400 pointer-events-none fill-current"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              />
+            </svg>
+          </div>
+        </div>
 
-  Wind
-  <!-- Insert wind here -->   
-  
-  Precipitation
-  <!-- Insert precipitation here -->
-
-  Daily forecast
-  <!-- Insert daily forecast for the next 7 days here -->
-
-  Hourly forecast
-  <!-- Insert hourly forecast for the selected day here -->
-
-  <footer class="attribution">
-    Challenge by <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>. 
-    Coded by <a href="#">Your Name Here</a>.
-  </footer>
-</body>
+        <div id="hourlyForecast" class="mt-5"></div>
+      </section>
+    </section>
+    <footer class="attribution">
+      Challenge by
+      <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>.
+      Coded by <a href="#">Yasmin Ali</a>.
+    </footer>
+  </body>
+  <script src="script.js"></script>
 </html>

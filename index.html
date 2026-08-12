@@ -125,39 +125,49 @@
       How's the sky looking today?
     </h1>
     <section class="flex gap-3 items-center justify-center mt-15">
-      <div
-        id="input-container"
-        class="bg-[hsl(243,23%,24%)] w-[480px] h-[45px] relative flex items-center rounded-lg px-3 py-2"
-      >
-        <img
-          src="assets/images/icon-search.svg"
-          alt="Search"
-          id="input-icon"
-          class="bg-[hsl(243,23%,24%)] m-2"
-        />
+      <form action="" class="flex items-center gap-4" id="search-form">
+        <div
+          id="input-container"
+          class="bg-[hsl(243,23%,24%)] w-[480px] h-[45px] relative flex items-center rounded-lg px-3 py-2"
+        >
+          <img
+            src="assets/images/icon-search.svg"
+            alt="Search"
+            id="input-icon"
+            class="bg-[hsl(243,23%,24%)] m-2"
+          />
 
-        <input
-          type="text"
-          placeholder="Search for a place..."
-          id="search"
-          class="bg-transparent"
-        />
-      </div>
-      <button
-        class="bg-[hsl(233,67%,56%)] px-3 py-2.5 rounded-lg text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        Search
-      </button>
+          <input
+            type="text"
+            placeholder="Search for a place..."
+            id="search"
+            class="bg-transparent w-[450px] outline-none border-none focus:outline-none focus:ring-0"
+          />
+        </div>
+        <button
+          type="submit"
+          id="search-button"
+          class="bg-[hsl(233,67%,56%)] px-3 py-2.5 rounded-lg text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Search
+        </button>
+      </form>
     </section>
-    <section class="flex justify-between items-start mt-20 gap-5 mb-10">
+    <section
+      class="flex justify-between items-start mt-20 gap-5 mb-10"
+      id="weatherApp"
+    >
       <div class="flex flex-col">
         <section
-          class="bg-[url(assets/images/bg-today-large.svg)] w-[700px] h-[200px] rounded-lg py-3 px-5"
+          id="weatherCard"
+          class="bg-[url('assets/images/bg-today-large.svg')] w-[700px] h-[200px] rounded-lg py-3 px-5 bg-cover bg-center"
         >
           <div class="flex justify-between items-center h-full">
             <div>
-              <p id="place">Berlin, Germany</p>
-              <p id="date">Tuesday, August 5, 2025</p>
+              <p id="place" class="text-xl font-semibold">Berlin, Germany</p>
+              <p id="date" class="text-sm opacity-80">
+                Tuesday, August 5, 2025
+              </p>
             </div>
 
             <p id="temperature" class="text-6xl font-bold">20°</p>
@@ -170,14 +180,17 @@
         ></section>
 
         <section>
-          <h2 class="mt-8 font-bold">Daily forecast</h2>
-          <div id="dailyForecast" class="flex gap-4 mt-5 max-w-[700px]"></div>
+          <h2 class="mt-8 font-bold text-xl">Daily forecast</h2>
+          <div
+            id="dailyForecast"
+            class="flex gap-4 mt-5 max-w-[700px] overflow-x-auto pb-2"
+          ></div>
         </section>
       </div>
 
       <section class="w-[350px] bg-[hsl(243,27%,20%)] rounded-lg p-5">
         <div class="flex justify-between items-center">
-          <h2 class="font-bold">Hourly forecast</h2>
+          <h2 class="font-bold text-xl">Hourly forecast</h2>
 
           <div
             class="flex items-center gap-2 bg-[hsl(243,23%,30%)] border border-slate-700 rounded-lg px-3 py-1.5 shadow-sm w-fit"
@@ -186,47 +199,8 @@
               id="category"
               class="bg-transparent text-slate-200 text-sm font-medium focus:outline-none cursor-pointer py-1 pr-2 border-none appearance-none"
             >
-              <option
-                value="tuesday"
-                class="bg-[hsl(243,96%,9%)] text-slate-200"
-              >
-                Tuesday
-              </option>
-              <option
-                value="wednesday"
-                class="bg-[hsl(243,96%,9%)] text-slate-200"
-              >
-                Wednesday
-              </option>
-              <option
-                value="thursday"
-                class="bg-[hsl(243,96%,9%)] text-slate-200"
-              >
-                Thursday
-              </option>
-              <option
-                value="friday"
-                class="bg-[hsl(243,96%,9%)] text-slate-200"
-              >
-                Friday
-              </option>
-              <option
-                value="saturday"
-                class="bg-[hsl(243,96%,9%)] text-slate-200"
-              >
-                Saturday
-              </option>
-              <option
-                value="sunday"
-                class="bg-[hsl(243,96%,9%)] text-slate-200"
-              >
-                Sunday
-              </option>
-              <option
-                value="monday"
-                class="bg-[hsl(243,96%,9%)] text-slate-200"
-              >
-                Monday
+              <option value="0" class="bg-[hsl(243,96%,9%)] text-slate-200">
+                Today
               </option>
             </select>
 
@@ -241,7 +215,10 @@
           </div>
         </div>
 
-        <div id="hourlyForecast" class="mt-5"></div>
+        <div
+          id="hourlyForecast"
+          class="mt-5 max-h-[400px] overflow-y-auto"
+        ></div>
       </section>
     </section>
     <footer class="attribution">

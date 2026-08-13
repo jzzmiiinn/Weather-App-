@@ -47,81 +47,105 @@
   >
     <section class="flex flex-row justify-between items-center">
       <img src="assets/images/logo.svg" alt="lOGO" class="h-[35px]" />
-      <div class="flex flex-row gap-3 items-center">
-        <div class="relative inline-block w-64">
-          <select
-            id="weather-data"
-            class="w-full appearance-none bg-[hsl(243,96%,9%)] border border-slate-700 text-slate-200 py-2.5 px-4 pr-10 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer text-sm font-medium"
+      <div class="relative" id="units-dropdown-wrapper">
+        <button
+          id="units-btn"
+          type="button"
+          class="flex items-center gap-2 bg-[hsl(243,23%,24%)] hover:bg-[hsl(243,23%,30%)] border border-slate-700 text-slate-200 py-2.5 px-4 rounded-lg text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <img src="assets/images/icon-units.svg" alt="" class="w-4 h-4" />
+          <span>Units</span>
+          <svg class="w-4 h-4 fill-current text-slate-400" viewBox="0 0 20 20">
+            <path
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            />
+          </svg>
+        </button>
+
+        <div
+          id="units-menu"
+          class="hidden absolute right-0 mt-2 w-64 bg-[hsl(243,27%,20%)] border border-slate-700 rounded-xl shadow-xl z-50 p-2"
+        >
+          <button
+            id="unit-toggle"
+            data-system="metric"
+            class="unit-system-btn w-full text-left px-3 py-2 rounded-lg hover:bg-[hsl(243,23%,30%)] text-sm"
           >
-            <optgroup
-              label="Switch Unit System"
-              class="bg-[hsl(243,96%,9%)] text-slate-400 font-semibold italic"
-            >
-              <option
-                value="celsius"
-                class="text-slate-200 font-normal not-italic bg-[hsl(243,96%,9%)] py-1"
-              >
-                Celsius (°C)
-              </option>
-              <option
-                value="fahrenheit"
-                class="text-slate-200 font-normal not-italic bg-[hsl(243,96%,9%)] py-1"
-              >
-                Fahrenheit (°F)
-              </option>
-            </optgroup>
+            Switch to Imperial
+          </button>
 
-            <optgroup
-              label="Wind Speed"
-              class="bg-[hsl(243,96%,9%)] text-slate-400 font-semibold italic"
-            >
-              <option
-                value="kmh"
-                class="text-slate-200 font-normal not-italic bg-[hsl(243,96%,9%)] py-1"
-              >
-                km/h
-              </option>
-              <option
-                value="mph"
-                class="text-slate-200 font-normal not-italic bg-[hsl(243,96%,9%)] py-1"
-              >
-                mph
-              </option>
-            </optgroup>
+          <div class="border-t border-slate-700 my-2"></div>
 
-            <optgroup
-              label="Precipitation"
-              class="bg-[hsl(243,96%,9%)] text-slate-400 font-semibold italic"
-            >
-              <option
-                value="mm"
-                class="text-slate-200 font-normal not-italic bg-[hsl(243,96%,9%)] py-1"
-              >
-                Millimeters (mm)
-              </option>
-              <option
-                value="in"
-                class="text-slate-200 font-normal not-italic bg-[hsl(243,96%,9%)] py-1"
-              >
-                Inches (in)
-              </option>
-            </optgroup>
-          </select>
-
-          <!-- Custom Dropdown Icon -->
-          <div
-            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400"
-          >
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-              <path
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              />
-            </svg>
+          <div class="px-3 py-1 text-xs font-semibold text-slate-400">
+            Temperature
           </div>
+          <button
+            data-type="temperature"
+            data-value="celsius"
+            class="unit-option w-full text-left px-3 py-2 rounded-lg hover:bg-[hsl(243,23%,30%)] text-sm flex justify-between"
+          >
+            <span>Celsius (°C)</span>
+            <span class="check hidden">✓</span>
+          </button>
+          <button
+            data-type="temperature"
+            data-value="fahrenheit"
+            class="unit-option w-full text-left px-3 py-2 rounded-lg hover:bg-[hsl(243,23%,30%)] text-sm flex justify-between"
+          >
+            <span>Fahrenheit (°F)</span>
+            <span class="check hidden">✓</span>
+          </button>
+
+          <div class="border-t border-slate-700 my-2"></div>
+
+          <div class="px-3 py-1 text-xs font-semibold text-slate-400">
+            Wind Speed
+          </div>
+          <button
+            data-type="wind"
+            data-value="kmh"
+            class="unit-option w-full text-left px-3 py-2 rounded-lg hover:bg-[hsl(243,23%,30%)] text-sm flex justify-between"
+          >
+            <span>km/h</span>
+            <span class="check hidden">✓</span>
+          </button>
+          <button
+            data-type="wind"
+            data-value="mph"
+            class="unit-option w-full text-left px-3 py-2 rounded-lg hover:bg-[hsl(243,23%,30%)] text-sm flex justify-between"
+          >
+            <span>mph</span>
+            <span class="check hidden">✓</span>
+          </button>
+
+          <div class="border-t border-slate-700 my-2"></div>
+
+          <div class="px-3 py-1 text-xs font-semibold text-slate-400">
+            Precipitation
+          </div>
+          <button
+            data-type="precipitation"
+            data-value="mm"
+            class="unit-option w-full text-left px-3 py-2 rounded-lg hover:bg-[hsl(243,23%,30%)] text-sm flex justify-between"
+          >
+            <span>Millimeters (mm)</span>
+            <span class="check hidden">✓</span>
+          </button>
+          <button
+            data-type="precipitation"
+            data-value="inch"
+            class="unit-option w-full text-left px-3 py-2 rounded-lg hover:bg-[hsl(243,23%,30%)] text-sm flex justify-between"
+          >
+            <span>Inches (in)</span>
+            <span class="check hidden">✓</span>
+          </button>
         </div>
       </div>
     </section>
-    <h1 class="text-white text-5xl font-bold text-center my-10 mx-10">
+    <h1
+      id="heading"
+      class="text-white text-5xl font-bold text-center my-10 mx-10"
+    >
       How's the sky looking today?
     </h1>
     <section class="flex gap-3 items-center justify-center mt-15">
@@ -141,7 +165,8 @@
             type="text"
             placeholder="Search for a place..."
             id="search"
-            class="bg-transparent w-[450px] outline-none border-none focus:outline-none focus:ring-0"
+            autocomplete="off"
+            class="w-[450px] border-none bg-[hsl(243,23%,24%)] text-white outline-none placeholder:text-gray-400 focus:bg-[hsl(243,23%,24%)] focus:text-white autofill:bg-[hsl(243,23%,24%)] autofill:text-white"
           />
         </div>
         <button
@@ -161,18 +186,7 @@
         <section
           id="weatherCard"
           class="bg-[url('assets/images/bg-today-large.svg')] w-[700px] h-[200px] rounded-lg py-3 px-5 bg-cover bg-center"
-        >
-          <div class="flex justify-between items-center h-full">
-            <div>
-              <p id="place" class="text-xl font-semibold">Berlin, Germany</p>
-              <p id="date" class="text-sm opacity-80">
-                Tuesday, August 5, 2025
-              </p>
-            </div>
-
-            <p id="temperature" class="text-6xl font-bold">20°</p>
-          </div>
-        </section>
+        ></section>
 
         <section
           id="weatherStats"
@@ -192,26 +206,28 @@
         <div class="flex justify-between items-center">
           <h2 class="font-bold text-xl">Hourly forecast</h2>
 
-          <div
-            class="flex items-center gap-2 bg-[hsl(243,23%,30%)] border border-slate-700 rounded-lg px-3 py-1.5 shadow-sm w-fit"
-          >
-            <select
-              id="category"
-              class="bg-transparent text-slate-200 text-sm font-medium focus:outline-none cursor-pointer py-1 pr-2 border-none appearance-none"
+          <div class="relative" id="days-dropdown-wrapper">
+            <button
+              id="days-btn"
+              type="button"
+              class="flex items-center gap-2 bg-[hsl(243,23%,30%)] hover:bg-[hsl(243,23%,35%)] border border-slate-700 text-slate-200 py-2 px-3 rounded-lg text-sm font-medium transition-all focus:outline-none"
             >
-              <option value="0" class="bg-[hsl(243,96%,9%)] text-slate-200">
-                Today
-              </option>
-            </select>
+              <span id="selected-day">Today</span>
 
-            <svg
-              class="w-4 h-4 text-slate-400 pointer-events-none fill-current"
-              viewBox="0 0 20 20"
-            >
-              <path
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              />
-            </svg>
+              <svg
+                class="w-4 h-4 fill-current text-slate-400"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                />
+              </svg>
+            </button>
+
+            <div
+              id="days-menu"
+              class="hidden absolute right-0 mt-2 w-40 bg-[hsl(243,27%,20%)] border border-slate-700 rounded-xl shadow-xl z-50 p-2"
+            ></div>
           </div>
         </div>
 

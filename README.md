@@ -1,116 +1,234 @@
-# Frontend Mentor - Weather app
+# Weather App
 
-![Design preview for the Weather app coding challenge](./preview.jpg)
+A weather application built as a **Frontend Mentor challenge** using HTML, Tailwind CSS, and JavaScript. The app uses the **Open-Meteo API** to search for locations and display current, daily, and hourly weather information.
 
-## Welcome! 👋
+## Features
 
-Thanks for checking out this coding challenge.
+* Search for weather information by city name
+* Display the current:
 
-[Frontend Mentor](https://www.frontendmentor.io) challenges help you improve your coding skills by building realistic projects.
+  * Location
+  * Date
+  * Temperature
+  * Feels-like temperature
+  * Humidity
+  * Wind speed
+  * Precipitation
+* Display a 7-day weather forecast
+* Display an hourly weather forecast
+* Weather icons based on weather conditions
+* Switch between temperature units:
 
-**To do this challenge, you need a good understanding of HTML, CSS, and JavaScript.**
+  * Celsius (°C)
+  * Fahrenheit (°F)
+* Switch between wind speed units:
 
-## The challenge
+  * km/h
+  * mph
+* Switch between precipitation units:
 
-Build a weather app using the [Open-Meteo API](https://open-meteo.com/) and get it looking as close to the design as possible.
+  * Millimeters (mm)
+  * Inches (in)
+* Loading skeleton while weather data is being fetched
+* Error state for invalid locations or failed API requests
+* Empty state before weather data is searched
 
-You can use any tools you like to help you complete the challenge. So if you've got something you'd like to practice, feel free to give it a go.
+## Technologies Used
 
-Your users should be able to:
+* HTML5
+* Tailwind CSS
+* JavaScript
+* Fetch API
+* Open-Meteo API
+* Google Fonts — DM Sans
 
-- Search for weather information by entering a location in the search bar
-- View current weather conditions including temperature, weather icon, and location details
-- See additional weather metrics like "feels like" temperature, humidity percentage, wind speed, and precipitation amounts
-- Browse a 7-day weather forecast with daily high/low temperatures and weather icons
-- View an hourly forecast showing temperature changes throughout the day
-- Switch between different days of the week using the day selector in the hourly forecast section
-- Toggle between Imperial and Metric measurement units via the units dropdown
-- View the optimal layout for the interface depending on their device's screen size
-- See hover and focus states for all interactive elements on the page
+## APIs
 
-## Getting started
+The application uses Open-Meteo for both location search and weather data.
 
-### What's included
+* [Open-Meteo](https://open-meteo.com/)
+* [Open-Meteo Weather API Documentation](https://open-meteo.com/en/docs)
+* [Open-Meteo Geocoding API Documentation](https://open-meteo.com/en/docs/geocoding-api)
 
-Your task is to build out the project to the designs inside the `/design` folder. You will find both a mobile and a desktop version of the design.
+No API key is required.
 
-**In your download:**
-- Mobile and desktop designs (JPG format)
-- All required assets in the `/assets` folder
-- Variable and static font files (or link to Google Fonts)
-- `style-guide.md` with colors, fonts, and other design specs
+## How It Works
 
-**Want more accurate builds?** The designs are in JPG static format, which means you'll need to use your best judgment for styles such as `font-size`, `padding`, and `margin`. If you'd like the Figma design file to help build a more accurate solution faster, you can [subscribe as a PRO member](https://www.frontendmentor.io/pro).
+### Location Search
 
-### API setup
+When a user searches for a city, the application sends the city name to the Open-Meteo Geocoding API.
 
-This project uses the [Open-Meteo API](https://open-meteo.com/) to fetch weather data.
+The API returns the location's:
 
-**Good news:** Open-Meteo is completely free and doesn't require an API key! You can start making requests right away.
+* Name
+* Country
+* Latitude
+* Longitude
 
-- **API Documentation:** [https://open-meteo.com/en/docs](https://open-meteo.com/en/docs)
-- **No rate limits** for reasonable personal use
-- Example endpoint: `https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true`
+The coordinates are then used to request weather data.
 
-Check their documentation for all available weather parameters and location search capabilities.
+### Weather Data
 
-## Using AI coding assistants
+The application requests:
 
-We've included two files to help you if you're using AI coding assistants (like Claude, GitHub Copilot, Cursor, etc.) while working on this challenge:
+* Current weather
+* Daily forecast
+* Hourly forecast
 
-- `AGENTS.md` - Contains detailed instructions for AI assistants on how to help you with this challenge. It's tailored to this challenge's difficulty level, so the AI will provide guidance appropriate to your learning stage—offering more support for beginner challenges and encouraging more independence on advanced ones.
-- `CLAUDE.md` - A pointer file that directs Claude-based tools to the AGENTS.md instructions.
+The returned data is processed using JavaScript and displayed dynamically in the UI.
 
-**How to use them:** You don't need to do anything! These files are automatically detected by most AI coding tools. The AI will read them and adjust its behavior to be a better learning partner—guiding you toward solutions rather than just giving you the answers.
+### Unit Switching
 
-**Note:** These files are designed to help you *learn*, not to do the work for you. The AI is instructed to ask questions, give hints, and explain concepts rather than writing complete solutions.
+The units dropdown allows users to change individual measurement units.
 
-## Building your project
+```text
+Temperature
+├── Celsius
+└── Fahrenheit
 
-Feel free to use any workflow that you feel comfortable with. Below is a suggested process, but do not feel like you need to follow these steps:
+Wind Speed
+├── km/h
+└── mph
 
-1. Initialize your project as a public repository on [GitHub](https://github.com/). Creating a repo will make it easier to share your code with the community if you need help. If you're not sure how to do this, [have a read-through of this Try Git resource](https://try.github.io/).
-2. Configure your repository to publish your code to a web address. This will also be useful if you need some help during a challenge as you can share the URL for your project with your repo URL. There are a number of ways to do this, and we provide some recommendations below.
-3. Look through the designs to start planning out how you'll tackle the project. This step is crucial to help you think ahead for CSS classes to create reusable styles.
-4. Before adding any styles, structure your content with HTML. Writing your HTML first can help focus your attention on creating well-structured content.
-5. Write out the base styles for your project, including general content styles, such as `font-family` and `font-size`.
-6. Start adding styles to the top of the page and work down. Only move on to the next section once you're happy you've completed the area you're working on.
+Precipitation
+├── Millimeters
+└── Inches
+```
 
-### Want some support on the challenge?
+When a unit is changed, the application fetches the weather data again using the selected unit.
 
-[Join our community](https://www.frontendmentor.io/community) and ask questions in the **#help** channel.
+## Loading and Error States
 
-## Deploying your project
+The application includes different UI states to improve the user experience.
 
-As mentioned above, there are many ways to host your project for free. Our recommended hosts are:
+### Initial State
 
-- [GitHub Pages](https://pages.github.com/)
-- [Vercel](https://vercel.com/)
-- [Netlify](https://www.netlify.com/)
+Before a search is performed, the weather section displays a message asking the user to search for a location.
 
-You can host your site using one of these solutions or any of our other trusted providers. [Read more about our recommended and trusted hosts](https://www.frontendmentor.io/guides/hosting-your-solution).
+### Loading State
 
-## Submitting your solution
+While the API request is being processed, skeleton elements are displayed for the weather card, statistics, daily forecast, and hourly forecast.
 
-Submit your solution on the platform for the rest of the community to see. Follow our ["Complete guide to submitting solutions"](https://www.frontendmentor.io/guides/how-to-submit-solutions) for tips on how to do this.
+### Error State
 
-Remember, if you're looking for feedback on your solution, be sure to ask questions when submitting it. The more specific and detailed you are with your questions, the higher the chance you'll get valuable feedback from the community.
+If a location cannot be found or the API request fails, an error message is displayed.
 
-**We strongly recommend overwriting this `README.md` with a custom one.** We've provided a template inside the [`README-template.md`](./README-template.md) file in this starter code. The template provides a guide for what to add. A custom `README` will help you explain your project and reflect on your learnings.
+## Weather Icons
 
-## Sharing your solution
+Weather codes returned by Open-Meteo are mapped to the application's weather icons using the `getWeatherIcon()` function.
 
-There are multiple places you can share your solution:
+The application supports conditions including:
 
-1. Submit it on the platform and share your solution page in the **#finished-projects** channel of our [community](https://www.frontendmentor.io/community)
-2. Share on [X (formerly Twitter)](https://x.com/frontendmentor) and mention **@frontendmentor**, including the repo and live URLs in your post. We'd love to take a look at what you've built and help share it around.
-3. Share your solution on [LinkedIn](https://www.linkedin.com/company/frontend-mentor/).
-4. Blog about your experience building your project. Writing about your workflow, technical choices, and talking through your code is a brilliant way to reinforce what you've learned. Great platforms to write on are [dev.to](https://dev.to/), [Hashnode](https://hashnode.com/), and [CodeNewbie](https://community.codenewbie.org/).
+* Sunny
+* Partly cloudy
+* Overcast
+* Fog
+* Rain
+* Snow
+* Thunderstorms
 
-## Got feedback for us?
+## Project Structure
 
-We love receiving feedback! We're always looking to improve our challenges and our platform. So if you have anything you'd like to mention, please email hi[at]frontendmentor[dot]io.
+```text
+Weather-App/
+│
+├── assets/
+│   └── images/
+│       ├── bg-today-large.svg
+│       ├── icon-search.svg
+│       ├── icon-sunny.webp
+│       ├── icon-rain.webp
+│       ├── icon-snow.webp
+│       ├── icon-fog.webp
+│       ├── icon-storm.webp
+│       ├── icon-overcast.webp
+│       ├── icon-partly-cloudy.webp
+│       └── logo.svg
+│
+├── index.html
+├── script.js
+└── README.md
+```
 
-**This challenge is completely free. Please share it with anyone who will find it useful for practice.**
+## Getting Started
 
-**Have fun building!** 🚀
+### Clone the repository
+
+```bash
+git clone https://github.com/jzzmiiinn/Weather-App.git
+```
+
+### Open the project
+
+```bash
+cd Weather-App
+```
+
+You can open `index.html` directly in your browser or use the **Live Server** extension in VS Code.
+
+## What I Learned
+
+Building this project helped me practice working with real-world APIs and asynchronous JavaScript.
+
+Some of the main concepts I practiced were:
+
+* `fetch()`
+* Promises
+* `async/await`
+* Working with JSON data
+* API requests and responses
+* DOM manipulation
+* Event listeners
+* Dynamic element creation
+* Array methods
+* Error handling with `try...catch`
+* Loading and error states
+* Working with external API parameters
+* Managing application state with JavaScript variables
+
+## Challenges I Faced
+
+One of the main challenges was working with the weather API data because the information is returned in nested objects and arrays.
+
+I had to understand how to access values such as:
+
+```javascript
+data.current.temperature_2m
+data.current.relative_humidity_2m
+data.daily.temperature_2m_max
+data.hourly.temperature_2m
+```
+
+Another challenge was updating the weather data whenever the user changed the selected unit. This required keeping track of the current location and requesting the weather data again with the updated unit.
+
+## Future Improvements
+
+* Improve mobile responsiveness
+* Add a proper day selector for the hourly forecast
+* Display hourly forecasts for the selected day
+* Add user's current location using geolocation
+* Save the selected units using `localStorage`
+* Improve accessibility
+* Add more detailed weather information
+* Improve animations and transitions
+* Add a better mobile navigation/layout
+
+## Credits
+
+This project was created as part of a **Frontend Mentor** challenge.
+
+[Frontend Mentor](https://www.frontendmentor.io/?utm_source=chatgpt.com)
+
+Weather data is provided by **Open-Meteo**.
+
+[Open-Meteo](https://open-meteo.com/?utm_source=chatgpt.com)
+
+## Author
+
+### Yasmin Ali
+
+Software Engineering student focused on becoming a full-stack developer.
+
+## License
+
+This project was created for learning and portfolio purposes.

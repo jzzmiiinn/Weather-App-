@@ -43,9 +43,9 @@
     </style>
   </head>
   <body
-    class="bg-[hsl(243,96%,9%)] text-white px-20 py-12 items-center font-dm"
+    class="bg-[hsl(243,96%,9%)] text-white px-4 py-6 sm:px-6 lg:px-10 xl:px-20 font-dm"
   >
-    <section class="flex flex-row justify-between items-center">
+    <header class="flex flex-row justify-between items-center">
       <img src="assets/images/logo.svg" alt="lOGO" class="h-[35px]" />
       <div class="relative" id="units-dropdown-wrapper">
         <button
@@ -53,7 +53,11 @@
           type="button"
           class="flex items-center gap-2 bg-[hsl(243,23%,24%)] hover:bg-[hsl(243,23%,30%)] border border-slate-700 text-slate-200 py-2.5 px-4 rounded-lg text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          <img src="assets/images/icon-units.svg" alt="" class="w-4 h-4" />
+          <img
+            src="assets/images/icon-units.svg"
+            alt="Logo"
+            class="h-[28px] sm:h-[35px]"
+          />
           <span>Units</span>
           <svg class="w-4 h-4 fill-current text-slate-400" viewBox="0 0 20 20">
             <path
@@ -141,18 +145,21 @@
           </button>
         </div>
       </div>
-    </section>
+    </header>
     <h1
-      id="heading"
-      class="text-white text-5xl font-bold text-center my-10 mx-10"
+      class="text-white font-bold text-center my-8 sm:my-10 mx-2 sm:mx-10 text-3xl sm:text-4xl lg:text-5xl"
     >
       How's the sky looking today?
     </h1>
-    <section class="flex gap-3 items-center justify-center mt-15">
-      <form action="" class="flex items-center gap-4" id="search-form">
+    <section class="flex items-center justify-center mt-10 sm:mt-15">
+      <form
+        action=""
+        class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full max-w-[700px]"
+        id="search-form"
+      >
         <div
           id="input-container"
-          class="bg-[hsl(243,23%,24%)] w-[480px] h-[45px] relative flex items-center rounded-lg px-3 py-2"
+          class="bg-[hsl(243,23%,24%)] w-full h-[45px] relative flex items-center rounded-lg px-3 py-2"
         >
           <img
             src="assets/images/icon-search.svg"
@@ -166,43 +173,45 @@
             placeholder="Search for a place..."
             id="search"
             autocomplete="off"
-            class="w-[450px] border-none bg-[hsl(243,23%,24%)] text-white outline-none placeholder:text-gray-400 focus:bg-[hsl(243,23%,24%)] focus:text-white autofill:bg-[hsl(243,23%,24%)] autofill:text-white"
+            class="w-full border-none bg-[hsl(243,23%,24%)] text-white outline-none placeholder:text-gray-400 focus:bg-[hsl(243,23%,24%)] focus:text-white autofill:bg-[hsl(243,23%,24%)] autofill:text-white"
           />
         </div>
         <button
           type="submit"
           id="search-button"
-          class="bg-[hsl(233,67%,56%)] px-3 py-2.5 rounded-lg text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full sm:w-auto bg-[hsl(233,67%,56%)] px-6 py-2.5 rounded-lg text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           Search
         </button>
       </form>
     </section>
     <section
-      class="flex justify-between items-start mt-20 gap-5 mb-10"
+      class="flex flex-col lg:flex-row justify-between items-stretch lg:items-start mt-12 lg:mt-20 gap-6 mb-10"
       id="weatherApp"
     >
-      <div class="flex flex-col">
+      <div class="flex flex-col w-full lg:w-[700px]">
         <section
           id="weatherCard"
-          class="bg-[url('assets/images/bg-today-large.svg')] w-[700px] h-[200px] rounded-lg py-3 px-5 bg-cover bg-center"
+          class="bg-[url('assets/images/bg-today-large.svg')] w-full h-[180px] sm:h-[200px] rounded-lg py-3 px-4 sm:px-5 bg-cover bg-center"
         ></section>
 
         <section
           id="weatherStats"
-          class="flex justify-between mt-5 w-[700px]"
+          class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5 w-full"
         ></section>
 
         <section>
           <h2 class="mt-8 font-bold text-xl">Daily forecast</h2>
           <div
             id="dailyForecast"
-            class="flex gap-4 mt-5 max-w-[700px] overflow-x-auto pb-2"
+            class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4 mt-5 w-full"
           ></div>
         </section>
       </div>
 
-      <section class="w-[350px] bg-[hsl(243,27%,20%)] rounded-lg p-5">
+      <section
+        class="w-full lg:w-[350px] bg-[hsl(243,27%,20%)] rounded-lg p-4 sm:p-5"
+      >
         <div class="flex justify-between items-center">
           <h2 class="font-bold text-xl">Hourly forecast</h2>
 

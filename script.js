@@ -44,6 +44,20 @@ const weatherStats = [
   },
 ];
 
+function saveLocation(location) {
+  localStorage.setItem("lastLocation", JSON.stringify(location));
+}
+
+function getSavedLocation() {
+  const savedLocation = localStorage.getItem("lastLocation");
+
+  if (!savedLocation) {
+    return null;
+  }
+
+  return JSON.parse(savedLocation);
+}
+
 function updateUnitChecks() {
   document.querySelectorAll(".unit-option").forEach((btn) => {
     const type = btn.dataset.type;
@@ -149,24 +163,6 @@ document.addEventListener("click", () => {
   daysMenu.classList.add("hidden");
 });
 
-function showNoDataState() {
-  const weatherCard = document.getElementById("weatherCard");
-
-  if (weatherCard) {
-    weatherCard.className =
-      "bg-[hsl(243,27%,20%)] w-[700px] h-[200px] rounded-lg py-3 px-5 flex items-center justify-center";
-    weatherCard.innerHTML = `
-      <div class="text-center text-slate-400">
-        <p class="text-lg font-medium">Search for a place to see the weather</p>
-      </div>
-    `;
-  }
-
-  if (stats) stats.innerHTML = "";
-  if (daily) daily.innerHTML = "";
-  if (hourly) hourly.innerHTML = "";
-}
-
 function getWeatherIcon(code) {
   if (code === 0) {
     return "sunny";
@@ -247,6 +243,61 @@ function showError(message) {
   `;
 }
 
+async function loadInitialData() {
+  try {
+    showSkeleton();
+
+    const savedLocation = getSavedLocation();
+
+    if (savedLocation) {
+      currentLocation = savedLocation;
+
+      weatherData = await getWeather(
+        savedLocation.latitude,
+        savedLocation.longitude,
+      );
+
+      updateCurrentWeather(savedLocation, weatherData);
+      updateWeatherStats(weatherData);
+      updateDailyForecast(weatherData);
+      populateDaySelector(weatherData.daily);
+      updateHourlyForecast(weatherData, 0);
+
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+        currentLocation = {
+          latitude,
+          longitude,
+          name: "Your Location",
+          country: "",
+        };
+
+        weatherData = await getWeather(latitude, longitude);
+
+        updateCurrentWeather(currentLocation, weatherData);
+        updateWeatherStats(weatherData);
+        updateDailyForecast(weatherData);
+        populateDaySelector(weatherData.daily);
+        updateHourlyForecast(weatherData, 0);
+      },
+
+      (error) => {
+        console.error("Location error:", error);
+        showError("Unable to access your location.");
+      },
+    );
+  } catch (error) {
+    console.error("Failed to load initial data:", error);
+    showError("Could not load weather data.");
+  }
+}
+
 function showSkeleton() {
   const weatherCard = document.getElementById("weatherCard");
   const stats = document.getElementById("weatherStats");
@@ -280,7 +331,8 @@ function showSkeleton() {
       "border-[hsl(243,23%,30%)]",
       "rounded-lg",
       "p-4",
-      "w-[140px]",
+      "w-full",
+      "sm:w-[140px]",
       "h-[100px]",
       "animate-pulse",
     );
@@ -379,12 +431,11 @@ function updateCurrentWeather(location, weather) {
   const iconName = getWeatherIcon(weather.current.weather_code);
 
   weatherCard.className =
-    "bg-[url('assets/images/bg-today-large.svg')] bg-cover bg-center w-[700px] h-[200px] rounded-lg py-3 px-5";
-
+    "bg-[url('assets/images/bg-today-large.svg')] bg-cover bg-center w-full h-[180px] sm:h-[200px] rounded-lg py-3 px-4 sm:px-5";
   weatherCard.innerHTML = `
-    <div class="flex justify-between items-center h-full">
+    <div class="flex justify-between items-center h-full gap-2">
       <div>
-        <p id="place" class="text-xl font-semibold">${location.name}, ${location.country}</p>
+        <p id="place" class="text-base sm:text-xl font-semibold">${location.name}, ${location.country}</p>
         <p id="date" class="text-sm opacity-80">${formatDate(weather.current.time)}</p>
       </div>
 
@@ -392,9 +443,9 @@ function updateCurrentWeather(location, weather) {
         <img
           src="./assets/images/icon-${iconName}.webp"
           alt="${iconName}"
-          class="w-20 h-20"
+          class="w-14 h-14 sm:w-20 sm:h-20"
         />
-       <p id="temperature" class="text-6xl font-bold">${Math.round(weather.current.temperature_2m)}°</p>
+       <p id="temperature" class="text-4xl sm:text-6xl font-bold">${Math.round(weather.current.temperature_2m)}°</p>
      </div>
     </div>
   `;
@@ -413,6 +464,8 @@ searchForm.addEventListener("submit", async (event) => {
     const location = await getLocation(inputValue);
 
     currentLocation = location;
+
+    saveLocation(location);
 
     weatherData = await getWeather(location.latitude, location.longitude);
 
@@ -438,7 +491,8 @@ function createWeatherItems(weatherStats) {
     "border-[hsl(243,23%,30%)]",
     "rounded-lg",
     "p-4",
-    "w-[140px]",
+    "w-full",
+    "sm:w-[140px]",
     "h-[100px]",
   );
 
@@ -472,15 +526,19 @@ function updateWeatherStats(data) {
 
 function createDailyItems(dailyForecast) {
   const forecastCard = document.createElement("div");
+
   forecastCard.classList.add(
     "bg-[hsl(243,27%,20%)]",
     "border",
     "border-[hsl(243,23%,30%)]",
     "rounded-lg",
-    "p-4",
+    "p-3",
     "text-center",
-    "w-[140px]",
-    "h-[140px]",
+    "w-full",
+    "h-[150px]",
+    "flex",
+    "flex-col",
+    "items-center",
   );
 
   forecastCard.innerHTML = `
@@ -489,13 +547,12 @@ function createDailyItems(dailyForecast) {
     <img
       src="./assets/images/icon-${dailyForecast.icon}.webp"
       alt="${dailyForecast.icon}"
-      class="forecast-icon"
+      class="w-12 h-12 object-contain my-2"
     />
 
-    <div id="forecast-temp"
-      class="flex justify-between items-center mt-4">
-      <span id="high-temp">${dailyForecast.high}°</span>
-      <span id="low-temp" class="text-[hsl(240,6%,70%)]">${dailyForecast.low}°</span>
+    <div class="flex justify-between items-center w-full mt-auto">
+      <span>${dailyForecast.high}°</span>
+      <span class="text-[hsl(240,6%,70%)]">${dailyForecast.low}°</span>
     </div>
   `;
 
@@ -636,14 +693,4 @@ document.querySelectorAll(".unit-option").forEach((btn) => {
   });
 });
 
-document.getElementById("category").addEventListener("change", (e) => {
-  const dayIndex = Number(e.target.value);
-
-  if (weatherData) {
-    updateHourlyForecast(weatherData, dayIndex);
-  }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  showNoDataState();
-});
+loadInitialData();

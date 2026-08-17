@@ -154,9 +154,10 @@
     <section class="flex items-center justify-center mt-10 sm:mt-15">
       <form
         action=""
-        class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full max-w-[700px]"
+        class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 w-full max-w-[700px] relative"
         id="search-form"
       >
+        <!-- Input container (make it relative) -->
         <div
           id="input-container"
           class="bg-[hsl(243,23%,24%)] w-full h-[45px] relative flex items-center rounded-lg px-3 py-2"
@@ -175,7 +176,14 @@
             autocomplete="off"
             class="w-full border-none bg-[hsl(243,23%,24%)] text-white outline-none placeholder:text-gray-400 focus:bg-[hsl(243,23%,24%)] focus:text-white autofill:bg-[hsl(243,23%,24%)] autofill:text-white"
           />
+
+          <!-- Suggestions dropdown - positioned below the input -->
+          <div
+            id="suggestions"
+            class="absolute top-full left-0 right-0 z-50 mt-1 bg-[hsl(243,27%,20%)] border border-[hsl(243,23%,30%)] rounded-lg max-h-60 overflow-y-auto shadow-lg hidden"
+          ></div>
         </div>
+
         <button
           type="submit"
           id="search-button"
@@ -184,10 +192,6 @@
           Search
         </button>
       </form>
-      <div
-        id="suggestions"
-        class="absolute z-20 w-full max-w-md bg-[hsl(243,27%,20%)] border border-[hsl(243,23%,30%)] rounded-lg mt-1 hidden max-h-60 overflow-y-auto shadow-lg"
-      ></div>
     </section>
     <section
       class="flex flex-col items-center justify-center lg:flex-row gap-6 max-w-[900px] mx-auto lg:items-start mt-12 lg:mt-20 mb-10"

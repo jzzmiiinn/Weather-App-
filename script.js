@@ -14,6 +14,7 @@ const unitsBtn = document.getElementById("units-btn");
 const daysBtn = document.getElementById("days-btn");
 const daysMenu = document.getElementById("days-menu");
 const suggestionsBox = document.getElementById("suggestions");
+let selectedIndex = -1;
 
 let debounceTimer;
 let currentLocation = null;
@@ -494,6 +495,8 @@ async function fetchSuggestions(query) {
     const response = await fetch(url);
     const data = await response.json();
 
+    selectedIndex = -1; // reset when new results arrive
+
     if (!data.results || data.results.length === 0) {
       suggestionsBox.innerHTML = `
         <div class="px-4 py-3 text-slate-400 text-sm">No cities found</div>
@@ -535,6 +538,7 @@ async function fetchSuggestions(query) {
         searchInput.value = "";
         suggestionsBox.classList.add("hidden");
         suggestionsBox.innerHTML = "";
+        selectedIndex = -1;
 
         showSkeleton();
         try {
@@ -560,6 +564,7 @@ async function fetchSuggestions(query) {
 searchInput.addEventListener("input", () => {
   clearTimeout(debounceTimer);
   const query = searchInput.value.trim();
+  selectedIndex = -1; // reset selection when typing
 
   if (query.length < 2) {
     suggestionsBox.classList.add("hidden");
@@ -570,10 +575,50 @@ searchInput.addEventListener("input", () => {
   debounceTimer = setTimeout(() => fetchSuggestions(query), 300);
 });
 
+// Keyboard navigation
+searchInput.addEventListener("keydown", (e) => {
+  const buttons = suggestionsBox.querySelectorAll("button");
+
+  if (suggestionsBox.classList.contains("hidden") || buttons.length === 0) {
+    return;
+  }
+
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    selectedIndex = (selectedIndex + 1) % buttons.length;
+    updateHighlight(buttons);
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    selectedIndex = (selectedIndex - 1 + buttons.length) % buttons.length;
+    updateHighlight(buttons);
+  } else if (e.key === "Enter") {
+    if (selectedIndex >= 0 && selectedIndex < buttons.length) {
+      e.preventDefault(); // prevent form submit
+      buttons[selectedIndex].click(); // select the highlighted suggestion
+    }
+  } else if (e.key === "Escape") {
+    suggestionsBox.classList.add("hidden");
+    selectedIndex = -1;
+  }
+});
+
+// Highlight the currently selected suggestion
+function updateHighlight(buttons) {
+  buttons.forEach((btn, index) => {
+    if (index === selectedIndex) {
+      btn.classList.add("bg-[hsl(243,23%,30%)]");
+      btn.scrollIntoView({ block: "nearest" });
+    } else {
+      btn.classList.remove("bg-[hsl(243,23%,30%)]");
+    }
+  });
+}
+
 // Hide suggestions when clicking outside
 document.addEventListener("click", (e) => {
   if (!searchForm.contains(e.target)) {
     suggestionsBox.classList.add("hidden");
+    selectedIndex = -1;
   }
 });
 

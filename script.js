@@ -13,7 +13,9 @@ const unitsMenu = document.getElementById("units-menu");
 const unitsBtn = document.getElementById("units-btn");
 const daysBtn = document.getElementById("days-btn");
 const daysMenu = document.getElementById("days-menu");
+const suggestionsBox = document.getElementById("suggestions");
 
+let debounceTimer;
 let currentLocation = null;
 let weatherData = null;
 let fullHourlyData = null;
@@ -72,6 +74,45 @@ function updateUnitChecks() {
       btn.classList.remove("bg-[hsl(243,23%,30%)]");
     }
   });
+}
+
+async function reverseGeocode(latitude, longitude) {
+  const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&addressdetails=1`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        "User-Agent": "WeatherApp/1.0 (your-email@example.com)", // Required by Nominatim
+      },
+    });
+
+    if (!response.ok) throw new Error("Reverse geocoding failed");
+
+    const data = await response.json();
+    const address = data.address || {};
+
+    // Prefer city → town → village → municipality
+    const name =
+      address.city ||
+      address.town ||
+      address.village ||
+      address.municipality ||
+      address.county ||
+      "Unknown Location";
+
+    const country = address.country || "";
+
+    return { name, country, latitude, longitude };
+  } catch (error) {
+    console.error("Reverse geocode error:", error);
+    // Fallback
+    return {
+      name: "Your Location",
+      country: "",
+      latitude,
+      longitude,
+    };
+  }
 }
 
 async function applyUnits() {
@@ -248,45 +289,42 @@ async function loadInitialData() {
     showSkeleton();
 
     const savedLocation = getSavedLocation();
-
     if (savedLocation) {
       currentLocation = savedLocation;
-
       weatherData = await getWeather(
         savedLocation.latitude,
         savedLocation.longitude,
       );
-
       updateCurrentWeather(savedLocation, weatherData);
       updateWeatherStats(weatherData);
       updateDailyForecast(weatherData);
       populateDaySelector(weatherData.daily);
       updateHourlyForecast(weatherData, 0);
-
       return;
     }
 
+    // No saved location → use geolocation + reverse geocode
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
 
-        currentLocation = {
-          latitude,
-          longitude,
-          name: "Your Location",
-          country: "",
-        };
+        try {
+          // Get real city + country name instead of "Your Location"
+          currentLocation = await reverseGeocode(latitude, longitude);
 
-        weatherData = await getWeather(latitude, longitude);
+          weatherData = await getWeather(latitude, longitude);
 
-        updateCurrentWeather(currentLocation, weatherData);
-        updateWeatherStats(weatherData);
-        updateDailyForecast(weatherData);
-        populateDaySelector(weatherData.daily);
-        updateHourlyForecast(weatherData, 0);
+          updateCurrentWeather(currentLocation, weatherData);
+          updateWeatherStats(weatherData);
+          updateDailyForecast(weatherData);
+          populateDaySelector(weatherData.daily);
+          updateHourlyForecast(weatherData, 0);
+        } catch (error) {
+          console.error("Error loading weather for current location:", error);
+          showError("Could not load weather for your location.");
+        }
       },
-
       (error) => {
         console.error("Location error:", error);
         showError("Unable to access your location.");
@@ -297,7 +335,6 @@ async function loadInitialData() {
     showError("Could not load weather data.");
   }
 }
-
 function showSkeleton() {
   const weatherCard = document.getElementById("weatherCard");
   const stats = document.getElementById("weatherStats");
@@ -355,8 +392,8 @@ function showSkeleton() {
       "border",
       "border-[hsl(243,23%,30%)]",
       "rounded-lg",
-      "w-[140px]",
-      "h-[140px]",
+      "w-full",
+      "h-[150px]",
       "animate-pulse",
     );
 
@@ -450,6 +487,95 @@ function updateCurrentWeather(location, weather) {
     </div>
   `;
 }
+
+async function fetchSuggestions(query) {
+  try {
+    const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!data.results || data.results.length === 0) {
+      suggestionsBox.innerHTML = `
+        <div class="px-4 py-3 text-slate-400 text-sm">No cities found</div>
+      `;
+      suggestionsBox.classList.remove("hidden");
+      return;
+    }
+
+    suggestionsBox.innerHTML = data.results
+      .map(
+        (loc) => `
+        <button
+          type="button"
+          class="w-full text-left px-4 py-3 hover:bg-[hsl(243,23%,30%)] transition-colors text-sm"
+          data-name="${loc.name}"
+          data-country="${loc.country || ""}"
+          data-lat="${loc.latitude}"
+          data-lon="${loc.longitude}"
+        >
+          <span class="font-medium">${loc.name}</span>
+          <span class="text-slate-400 ml-1">${loc.admin1 ? loc.admin1 + ", " : ""}${loc.country || ""}</span>
+        </button>
+      `,
+      )
+      .join("");
+
+    suggestionsBox.classList.remove("hidden");
+
+    // Click handlers for suggestions
+    suggestionsBox.querySelectorAll("button").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const location = {
+          name: btn.dataset.name,
+          country: btn.dataset.country,
+          latitude: parseFloat(btn.dataset.lat),
+          longitude: parseFloat(btn.dataset.lon),
+        };
+
+        searchInput.value = "";
+        suggestionsBox.classList.add("hidden");
+        suggestionsBox.innerHTML = "";
+
+        showSkeleton();
+        try {
+          currentLocation = location;
+          saveLocation(location);
+          weatherData = await getWeather(location.latitude, location.longitude);
+          updateCurrentWeather(location, weatherData);
+          updateWeatherStats(weatherData);
+          updateDailyForecast(weatherData);
+          populateDaySelector(weatherData.daily);
+          updateHourlyForecast(weatherData, 0);
+        } catch (err) {
+          showError("Could not load weather data");
+        }
+      });
+    });
+  } catch (error) {
+    console.error("Suggestions error:", error);
+    suggestionsBox.classList.add("hidden");
+  }
+}
+
+searchInput.addEventListener("input", () => {
+  clearTimeout(debounceTimer);
+  const query = searchInput.value.trim();
+
+  if (query.length < 2) {
+    suggestionsBox.classList.add("hidden");
+    suggestionsBox.innerHTML = "";
+    return;
+  }
+
+  debounceTimer = setTimeout(() => fetchSuggestions(query), 300);
+});
+
+// Hide suggestions when clicking outside
+document.addEventListener("click", (e) => {
+  if (!searchForm.contains(e.target)) {
+    suggestionsBox.classList.add("hidden");
+  }
+});
 
 searchForm.addEventListener("submit", async (event) => {
   event.preventDefault();

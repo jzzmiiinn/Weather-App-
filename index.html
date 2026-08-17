@@ -55,8 +55,8 @@
         >
           <img
             src="assets/images/icon-units.svg"
-            alt="Logo"
-            class="h-[28px] sm:h-[35px]"
+            alt=""
+            class="h-[15px] sm:h-[20px]"
           />
           <span>Units</span>
           <svg class="w-4 h-4 fill-current text-slate-400" viewBox="0 0 20 20">
@@ -184,9 +184,13 @@
           Search
         </button>
       </form>
+      <div
+        id="suggestions"
+        class="absolute z-20 w-full max-w-md bg-[hsl(243,27%,20%)] border border-[hsl(243,23%,30%)] rounded-lg mt-1 hidden max-h-60 overflow-y-auto shadow-lg"
+      ></div>
     </section>
     <section
-      class="flex flex-col lg:flex-row justify-between items-stretch lg:items-start mt-12 lg:mt-20 gap-6 mb-10"
+      class="flex flex-col items-center justify-center lg:flex-row gap-6 max-w-[900px] mx-auto lg:items-start mt-12 lg:mt-20 mb-10"
       id="weatherApp"
     >
       <div class="flex flex-col w-full lg:w-[700px]">
